@@ -3,3 +3,4 @@ dist/**
 nbproject/**
 .idea/
 **.iml
+out/
