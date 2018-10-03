@@ -42,11 +42,12 @@ public class Otimizacao {
         for (String s : args) {
             System.out.println(s);
         }
-//        if (args.length != 5 || args.length != 2) {
-//            System.out.println("Usage: $ java -jar otimizacao.jar <outputFile> <inputFile> <alpha> <graspIterations> <localSearchIterations>");
-//            System.out.println("or: $ java -jar otimizacao.jar <outputFile> <inputFile> ");
-//            return;
-//        }
+        if (args.length != 5 || args.length != 2) {
+            System.out.println("Usage: $ java -jar otimizacao.jar <outputFile> <inputFile> <alpha> <graspIterations> <localSearchIterations>");
+            System.out.println("or: $ java -jar otimizacao.jar <outputFile> <inputFile> ");
+            return;
+        }
+
         if (args.length == 5) {
             RANDOMNESS = Float.parseFloat(args[2]);
             GRASP_ITERATIONS = Integer.parseInt(args[3]);
@@ -55,6 +56,7 @@ public class Otimizacao {
 
         List<Integer> n = Parser.readFile(args[1]);
 
+        n.remove(0);
         Bin.capacity = n.remove(0);
 
         Otimizacao o = new Otimizacao();

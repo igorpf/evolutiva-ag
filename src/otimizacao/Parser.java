@@ -20,17 +20,15 @@ import java.util.logging.Logger;
  */
 public class Parser {
     public static List<Integer> readFile(String path){
-        BufferedReader br = null;
+        BufferedReader br;
         List<Integer> numbers = new ArrayList<>();
         String currentLine;
         
         try {
             br = new BufferedReader(new FileReader(path));
+            br.readLine();
             currentLine=br.readLine();
-            currentLine=br.readLine();
-            int i=0;
             while(currentLine!=null){
-                //System.out.println(i++);
                 numbers.add(Integer.parseInt(currentLine));
                 currentLine=br.readLine();
             }
