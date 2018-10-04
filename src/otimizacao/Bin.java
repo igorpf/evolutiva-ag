@@ -6,6 +6,7 @@
 package otimizacao;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -14,40 +15,53 @@ import java.util.List;
  */
 public class Bin {
     public static int capacity=100;
-    
+
     private List<Item> items;
-    
+
     private int weightUsed;
-    
+
     public Bin(){
         this.items=new ArrayList<>();
         this.weightUsed=0;
     }
-    public void removeItem(Item i) throws Exception{
+
+    public Bin(Item item) {
+        this();
+        this.addItem(item);
+    }
+
+    public Bin(Bin bin){
+        this.items = new ArrayList<>(bin.getItems());
+        this.weightUsed = bin.getWeightUsed();
+    }
+
+    public void removeItem(Item i){
         if(!items.remove(i)){
-            throw new Exception("Item not found");
+            throw new IllegalArgumentException("Item not found");
         }
-        i.setBin(null);
         this.weightUsed-=i.getWeight();
     }
-    public void removeItem(int index) throws Exception{
-        Item removed=items.remove(index) ;        
+    public void removeItem(int index){
+        Item removed=items.remove(index) ;
         if(removed==null){
-            throw new Exception("Item not found");
+            throw new IllegalArgumentException("Item not found");
         }
-        removed.setBin(null);
         this.weightUsed-=removed.getWeight();
     }
-    public void addItem(Item i) throws Exception{
-        if((i.getWeight()+this.weightUsed)<=capacity){
-            items.add(i);
-            i.setBin(this);
+
+    public void addItem(Item i){
+        if((i.getWeight()+this.weightUsed)<= Bin.capacity){
+            this.items.add(i);
             weightUsed+=i.getWeight();
         }
         else
-            throw new Exception("Bin already full!");
+            throw new IllegalArgumentException("Bin already full!");
     }
-    
+
+    public void addItems(Collection<Item> items){
+        items.forEach(item -> this.addItem(item));
+    }
+
     public List<Item> getItems() {
         return items;
     }
@@ -55,31 +69,42 @@ public class Bin {
     public void setItems(List<Item> items) {
         this.items = items;
     }
+
     public boolean contains(Item i){
         return this.items.contains(i);
     }
+
     public boolean isEmpty(){
         return this.items.isEmpty();
     }
-    public int getWeightUsed(){
+
+    public Integer getWeightUsed(){
         return this.weightUsed;
     }
-    public static void changeItemBin(Item i, Bin destination) throws Exception{
+
+    public Boolean canAddItem(Item item){
+        return this.getWeightUsed() + item.getWeight() <= Bin.capacity;
+    }
+
+    public static void changeItemBin(Item i, Bin destination) throws IllegalArgumentException{
         if(destination.getWeightUsed()+i.getWeight()<=capacity){
             i.getBin().removeItem(i);
             destination.addItem(i);
         }
         else
-            throw new Exception("Could not change bin!");
-        
+            throw new IllegalArgumentException("Could not change bin!");
+
     }
+
     @Override
     public String toString(){
         StringBuilder b=new StringBuilder();
+        b.append("Used weight: " + this.weightUsed);
         items.stream().forEach(i->{
-            b.append(i.getWeight());
-            b.append(" ");
+            b.append("\t\t\n ");
+            b.append(i);
         });
+            b.append("\n ");
         return b.toString();
     }
 }

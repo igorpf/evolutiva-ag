@@ -9,14 +9,24 @@ package otimizacao;
  *
  * @author igor
  */
-public class Item {
+public class Item implements Comparable<Item>{
+
+    private static Integer lastIdentifier = 0;
+
+    private Integer id;
 
     private int weight;
 
     private Bin bin;
-    
-    public Item(int weight) throws Exception{
+
+
+    public Item(int weight) throws IllegalArgumentException{
         this.setWeight(weight);
+        this.id = getNewId();
+    }
+
+    public Integer getNewId(){
+        return ++Item.lastIdentifier;
     }
     public Bin getBin() {
         return bin;
@@ -26,16 +36,37 @@ public class Item {
         this.bin = bin;
     }
 
-    public int getWeight() {
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getWeight() {
         return weight;
     }
 
-    public void setWeight(final int weight) throws Exception {
+    public void setWeight(final int weight) throws IllegalArgumentException {
         if (weight >= 0) {
             this.weight = weight;
         } else {
-            throw new Exception("Weight must be positive!");
+            throw new IllegalArgumentException("Weight must be positive!");
         }
     }
 
+    @Override
+    public String toString() {
+        return "Item: " + this.id.toString() + " weight: " + this.getWeight().toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Item)
+            return this.id.equals(((Item) obj).getId());
+        else
+            return super.equals(obj);
+    }
+
+    @Override
+    public int compareTo(Item o) {
+        return this.id.compareTo(o.getId());
+    }
 }
